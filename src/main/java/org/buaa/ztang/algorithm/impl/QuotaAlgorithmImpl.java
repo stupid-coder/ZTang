@@ -3,6 +3,7 @@ package org.buaa.ztang.algorithm.impl;
 import com.alibaba.fastjson.JSONObject;
 import org.buaa.ztang.algorithm.iface.QuotaAlgorithm;
 import org.buaa.ztang.model.GlucoseQuota;
+import org.buaa.ztang.model.ProfileQuota;
 
 /**
  * Created by qixiang on 1/7/17.
@@ -10,7 +11,7 @@ import org.buaa.ztang.model.GlucoseQuota;
 public class QuotaAlgorithmImpl implements QuotaAlgorithm {
 
     @Override
-    public String algo(JSONObject jsonObject) {
+    public JSONObject algo(ProfileQuota profileQuota) {
         return null;
     }
 

@@ -42,11 +42,11 @@ public class QuotaDaoImpl extends JdbcDaoSupport implements QuotaDao {
         List<Quota> quotaList;
 
         if ( status == null ) {
-            sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=?",table_name);
+            sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? ORDER BY measure_time DESC",table_name);
             quotaList = this.getJdbcTemplate().query(sql,new Quota(),uid,domain);
         }
         else {
-            sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND status=?", table_name);
+            sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND status=? ORDER BY measure_time DESC", table_name);
             quotaList = this.getJdbcTemplate().query(sql,new Quota(),uid,domain,status);
         }
 
@@ -55,13 +55,13 @@ public class QuotaDaoImpl extends JdbcDaoSupport implements QuotaDao {
 
     @Override
     public int add(Quota quota) throws Exception {
-        String sql = String.format("INSERT INTO %s (uid,domain,data,status) VALUES(?,?,?,?)",table_name);
-        return this.getJdbcTemplate().update(sql,quota.getUid(),quota.getDomain(),quota.getData().toString(),quota.getStatus());
+        String sql = String.format("INSERT INTO %s (uid, domain, data, status, measure_time) VALUES(?,?,?,?,?)",table_name);
+        return this.getJdbcTemplate().update(sql,quota.getUid(),quota.getDomain(),quota.getData().toString(),quota.getStatus(),quota.getMeasure_time());
     }
 
     @Override
     public int update(Quota quota) throws Exception {
-        String sql = String.format("UPDATE %s SET data=?, add_time=? WHERE id=?",table_name);
-        return this.getJdbcTemplate().update(sql,quota.getData().toString(), TimeUtils.currentTime(),quota.getId());
+        String sql = String.format("UPDATE %s SET data=?, measure_time=? WHERE id=?",table_name);
+        return this.getJdbcTemplate().update(sql,quota.getData().toString(), quota.getMeasure_time(),quota.getId());
     }
 }

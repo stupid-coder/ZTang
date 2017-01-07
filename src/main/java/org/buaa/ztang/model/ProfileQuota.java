@@ -63,6 +63,11 @@ public class ProfileQuota extends Quota {
         if ( !quotas.containsKey(quota.getDomain()) ) quotas.put(quota.getDomain(),quota);
     }
 
+    public <T extends Quota> T getQuota(String domain) {
+        if ( quotas.containsKey(domain) ) return (T) quotas.get(domain);
+        else return null;
+    }
+
     public JSONObject getQuotaData(String domain) {
         if ( quotas.containsKey(domain) ) return quotas.get(domain).dumpData();
         else return null;

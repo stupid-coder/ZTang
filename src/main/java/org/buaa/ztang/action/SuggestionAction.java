@@ -43,15 +43,18 @@ public class SuggestionAction {
                 logger.warn("failure to get ProfileQuota - uid:[{}]",uid);
                 return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion with no quota");
             } else {
-                JSONObject data = profileQuotaList.get(0).getQuotaData(domain);
+                ProfileQuota profileQuota = profileQuotaList.get(0);
+                JSONObject ret = new JSONObject();
+                JSONObject data = profileQuota.getQuotaData(domain);
+
                 if ( data == null ) {
-                    logger.warn("failure to get quota's data - uid:[{}] domain:[{}]",uid,domain);
+                    logger.warn("failure to get quota data - uid:[{}] domain:[{}]",uid,domain);
                     return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion with no quota");
-                } else {
-                    String suggestion = suggestionService.suggestion(domain,data);
-                    data.put("suggestion",suggestion);
-                    return new HttpResponseWrapperUtils(data);
                 }
+
+                ret.put("data",data);
+                ret.put("suggestion",suggestionService.suggestion(domain,profileQuota));
+                return new HttpResponseWrapperUtils(data);
             }
         } catch (Exception e) {
             logger.warn("failure to get suggestion - uid:[{}] domain:[{}]",uid,domain);
@@ -63,6 +66,7 @@ public class SuggestionAction {
     public HttpResponseWrapperUtils get(ServletRequest request, ServletResponse response,
                                         @PathVariable("id") int id)
     {
+        /*
         try {
             Quota quota = quotaService.get(id);
 
@@ -84,6 +88,8 @@ public class SuggestionAction {
             logger.warn("failure to get suggestion - id:[{}]",id);
             return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion");
         }
+        */
+        return new HttpResponseWrapperUtils(null);
     }
 
 
