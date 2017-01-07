@@ -1,0 +1,15 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS `Quota`;
+
+CREATE TABLE `Quota` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT,
+  `uid` INT(10) NOT NULL,
+  `domain` VARCHAR(20) NOT NULL,
+  `data` TEXT NOT NULL,
+  `measure_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` VARCHAR(10),
+  PRIMARY KEY(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET = utf8;
+
+CREATE INDEX  QuotaIndex on Quota(uid,domain);
