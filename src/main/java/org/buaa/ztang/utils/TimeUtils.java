@@ -7,9 +7,11 @@ import java.sql.Timestamp;
  */
 public class TimeUtils {
 
-    public static Timestamp currentTime()
+    public static final long MS_IN_DAY = 24L * 3600L * 1000L;
+
+    public static Timestamp currentTime(long offset)
     {
-        return new Timestamp(System.currentTimeMillis());
+        return new Timestamp(System.currentTimeMillis()+offset);
     }
 
 }

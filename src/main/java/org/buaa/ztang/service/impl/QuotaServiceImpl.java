@@ -3,8 +3,10 @@ package org.buaa.ztang.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.buaa.ztang.dao.iface.QuotaDao;
+import org.buaa.ztang.dao.iface.SuggestionDao;
 import org.buaa.ztang.model.*;
 import org.buaa.ztang.service.iface.QuotaService;
+import org.buaa.ztang.service.iface.SuggestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ public class QuotaServiceImpl implements QuotaService {
 
     @Autowired
     QuotaDao quotaDao;
+
+    @Autowired
+    SuggestionService suggestionService;
 
     @Override
     public Quota get(int id) throws Exception {
@@ -44,6 +49,8 @@ public class QuotaServiceImpl implements QuotaService {
             ret.addAll(get(uid,domain,status,ExerListQuota.class));
         else if ( domain.compareToIgnoreCase(ProfileQuota.domain_name) == 0 )
             ret.addAll(get(uid,domain,status,ProfileQuota.class));
+        else if ( domain.compareToIgnoreCase(Suggestion.domain_name) == 0 )
+            ret.addAll(get(uid,domain,status,Suggestion.class));
 
         return ret;
     }
@@ -92,16 +99,19 @@ public class QuotaServiceImpl implements QuotaService {
 
     @Override
     public int profileUpdate(Quota quota) throws Exception {
+        int ret = 0;
         List<ProfileQuota> profileQuotaList = get(quota.getUid(),ProfileQuota.domain_name,null,ProfileQuota.class);
         if (profileQuotaList.size() == 0) {
             ProfileQuota profileQuota = new ProfileQuota();
             profileQuota.setUid(quota.getUid());
             profileQuota.mergeData(quota);
-            return add(profileQuota);
+            ret = suggestionService.add(profileQuota.getSuggestion(quota.getDomain())) & add(profileQuota);
         } else {
             ProfileQuota profileQuota = profileQuotaList.get(0);
             profileQuota.mergeData(quota);
-            return update(profileQuota);
+            ret = suggestionService.add(profileQuota.getSuggestion(quota.getDomain())) & update(profileQuota);
         }
+
+        return ret;
     }
 }

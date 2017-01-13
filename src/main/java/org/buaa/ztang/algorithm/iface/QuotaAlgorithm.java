@@ -1,7 +1,7 @@
 package org.buaa.ztang.algorithm.iface;
 
-import com.alibaba.fastjson.JSONObject;
 import org.buaa.ztang.model.ProfileQuota;
+import org.buaa.ztang.model.Suggestion;
 
 
 /**
@@ -9,6 +9,6 @@ import org.buaa.ztang.model.ProfileQuota;
  */
 public interface QuotaAlgorithm {
 
-    JSONObject algo(ProfileQuota profileQuota);
+    Suggestion algo(ProfileQuota profileQuota);
 
 }

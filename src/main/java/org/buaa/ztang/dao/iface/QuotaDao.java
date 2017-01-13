@@ -2,6 +2,8 @@ package org.buaa.ztang.dao.iface;
 
 import org.buaa.ztang.model.Quota;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -12,6 +14,10 @@ public interface QuotaDao {
     Quota get(int id) throws Exception;
 
     List<Quota> get(int uid, String domain, String status) throws Exception;
+
+    List<Quota> get(int uid, String domain, String status, Timestamp timestamp) throws Exception;
+
+    List<Quota> get(int uid, String domain, String status, Timestamp timestamp, int size) throws Exception;
 
     int add(Quota quota) throws Exception;
 

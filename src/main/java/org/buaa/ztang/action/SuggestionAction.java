@@ -2,7 +2,7 @@ package org.buaa.ztang.action;
 
 import com.alibaba.fastjson.JSONObject;
 import org.buaa.ztang.model.ProfileQuota;
-import org.buaa.ztang.model.Quota;
+import org.buaa.ztang.model.Suggestion;
 import org.buaa.ztang.service.iface.QuotaService;
 import org.buaa.ztang.service.iface.SuggestionService;
 import org.buaa.ztang.utils.HttpResponseWrapperUtils;
@@ -44,17 +44,12 @@ public class SuggestionAction {
                 return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion with no quota");
             } else {
                 ProfileQuota profileQuota = profileQuotaList.get(0);
-                JSONObject ret = new JSONObject();
-                JSONObject data = profileQuota.getQuotaData(domain);
-
-                if ( data == null ) {
-                    logger.warn("failure to get quota data - uid:[{}] domain:[{}]",uid,domain);
-                    return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion with no quota");
+                JSONObject dataSuggestions = profileQuota.getQuotaAndSuggestion(domain);
+                if ( dataSuggestions == null ) {
+                    logger.warn("failure to get suggestion - uid:[{}] domain:[{}]",uid,domain);
+                    return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion");
                 }
-
-                ret.put("data",data);
-                ret.put("suggestion",suggestionService.suggestion(domain,profileQuota));
-                return new HttpResponseWrapperUtils(data);
+                return new HttpResponseWrapperUtils(dataSuggestions);
             }
         } catch (Exception e) {
             logger.warn("failure to get suggestion - uid:[{}] domain:[{}]",uid,domain);
@@ -66,32 +61,18 @@ public class SuggestionAction {
     public HttpResponseWrapperUtils get(ServletRequest request, ServletResponse response,
                                         @PathVariable("id") int id)
     {
-        /*
         try {
-            Quota quota = quotaService.get(id);
+            Suggestion suggestion = suggestionService.get(id);
 
-            if ( quota == null ) {
-                logger.warn("failure to get ProfileQuota - id:[{}]",id);
-                return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion with no quota");
+            if ( suggestion == null ) {
+                logger.warn("failure to get suggestion - id:[{}]",id);
+                return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion");
             } else {
-                JSONObject data = quota.getData();
-                if ( data == null ) {
-                    logger.warn("failure to get quota's data - id:[{}]",id);
-                    return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion with no quota");
-                } else {
-                    String suggestion = suggestionService.suggestion(quota.getDomain(),data);
-                    data.put("suggestion",suggestion);
-                    return new HttpResponseWrapperUtils(data);
-                }
+                return new HttpResponseWrapperUtils(suggestion.dumpData());
             }
         } catch (Exception e) {
             logger.warn("failure to get suggestion - id:[{}]",id);
             return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion");
         }
-        */
-        return new HttpResponseWrapperUtils(null);
     }
-
-
-
 }

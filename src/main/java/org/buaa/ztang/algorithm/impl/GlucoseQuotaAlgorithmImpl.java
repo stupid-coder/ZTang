@@ -1,9 +1,9 @@
 package org.buaa.ztang.algorithm.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import org.buaa.ztang.algorithm.iface.QuotaAlgorithm;
 import org.buaa.ztang.model.GlucoseQuota;
 import org.buaa.ztang.model.ProfileQuota;
+import org.buaa.ztang.model.Suggestion;
 
 /**
  * Created by qixiang on 1/7/17.
@@ -51,16 +51,13 @@ public class GlucoseQuotaAlgorithmImpl implements QuotaAlgorithm {
     }
 
     @Override
-    public JSONObject algo(ProfileQuota profileQuota) {
-        JSONObject jsonObject = new JSONObject();
+    public Suggestion algo(ProfileQuota profileQuota) {
+        Suggestion suggestion = new Suggestion(profileQuota, GlucoseQuota.domain_name);;
 
         GlucoseQuota glucoseQuota = profileQuota.getQuota(GlucoseQuota.domain_name);
 
-        if ( glucoseQuota == null ) jsonObject.put("error","please add Glucose Quota");
-        else {
-            jsonObject.put("PAbgE",getPAbgESuggestion(getPabgE(glucoseQuota)));
-        }
+        suggestion.addSuggestion("PAbgE",getPAbgESuggestion(getPabgE(glucoseQuota)));
 
-        return jsonObject;
+        return suggestion;
     }
 }

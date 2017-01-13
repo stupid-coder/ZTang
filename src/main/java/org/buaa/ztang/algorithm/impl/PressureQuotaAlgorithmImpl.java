@@ -1,9 +1,9 @@
 package org.buaa.ztang.algorithm.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import org.buaa.ztang.algorithm.iface.QuotaAlgorithm;
 import org.buaa.ztang.model.PressureQuota;
 import org.buaa.ztang.model.ProfileQuota;
+import org.buaa.ztang.model.Suggestion;
 
 /**
  * Created by qixiang on 1/7/17.
@@ -33,17 +33,14 @@ public class PressureQuotaAlgorithmImpl implements QuotaAlgorithm {
     }
 
     @Override
-    public JSONObject algo(ProfileQuota profileQuota)
+    public Suggestion algo(ProfileQuota profileQuota)
     {
 
-        JSONObject suggestion = new JSONObject();
+        Suggestion suggestion = new Suggestion(profileQuota, PressureQuota.domain_name);
 
         PressureQuota pressureQuota = profileQuota.getQuota(PressureQuota.domain_name);
 
-        if ( pressureQuota == null ) suggestion.put("error", "please add Pressure Quota");
-        else {
-            suggestion.put("PAbpE",getPApgESuggestion(getPAbpE(pressureQuota)));
-        }
+        suggestion.addSuggestion("PAbpE",getPApgESuggestion(getPAbpE(pressureQuota)));
 
         return suggestion;
     }

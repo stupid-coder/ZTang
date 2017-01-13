@@ -162,6 +162,8 @@ public class Quota implements java.io.Serializable, RowMapper<Quota>, Comparable
             return new DietQuota();
         else if ( domain.compareToIgnoreCase(ExerQuota.domain_name) == 0 )
             return new ExerQuota();
+        else if ( domain.compareToIgnoreCase(Suggestion.domain_name) == 0 )
+            return new Suggestion();
         else return null;
     }
 }
