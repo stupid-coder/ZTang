@@ -1,6 +1,5 @@
 package org.buaa.ztang.action;
 
-import com.alibaba.fastjson.JSONObject;
 import org.buaa.ztang.model.ProfileQuota;
 import org.buaa.ztang.model.Suggestion;
 import org.buaa.ztang.service.iface.QuotaService;
@@ -44,12 +43,12 @@ public class SuggestionAction {
                 return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion with no quota");
             } else {
                 ProfileQuota profileQuota = profileQuotaList.get(0);
-                JSONObject dataSuggestions = profileQuota.getQuotaAndSuggestion(domain);
-                if ( dataSuggestions == null ) {
+                Suggestion suggestion = profileQuota.getSuggestion(domain);
+                if ( suggestion == null ) {
                     logger.warn("failure to get suggestion - uid:[{}] domain:[{}]",uid,domain);
                     return new HttpResponseWrapperUtils(null,-1,"failure to get suggestion");
                 }
-                return new HttpResponseWrapperUtils(dataSuggestions);
+                return new HttpResponseWrapperUtils(suggestion.dumpData());
             }
         } catch (Exception e) {
             logger.warn("failure to get suggestion - uid:[{}] domain:[{}]",uid,domain);

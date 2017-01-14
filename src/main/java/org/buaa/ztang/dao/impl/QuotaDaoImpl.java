@@ -60,10 +60,10 @@ public class QuotaDaoImpl extends JdbcDaoSupport implements QuotaDao {
             return get(uid, domain, status);
         else {
             if ( status == null ) {
-                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND measure_time<? ORDER BY measure_date DESC", table_name);
+                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND measure_time>? ORDER BY measure_date DESC", table_name);
                 return this.getJdbcTemplate().query(sql,new Quota(), uid, domain, timestamp);
             } else {
-                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND status=? AND measure_time<? ORDER BY measure_date DESC", table_name);
+                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND status=? AND measure_time>? ORDER BY measure_date DESC", table_name);
                 return this.getJdbcTemplate().query(sql,new Quota(), uid, domain, status, timestamp);
             }
         }
@@ -75,10 +75,10 @@ public class QuotaDaoImpl extends JdbcDaoSupport implements QuotaDao {
             return get(uid,domain,status,timestamp);
         } else {
             if ( status == null ) {
-                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND measure_time<? ORDER BY measure_date DESC LIMIT %s", table_name, size);
+                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND measure_time>? ORDER BY measure_date DESC LIMIT %s", table_name, size);
                 return this.getJdbcTemplate().query(sql,new Quota(), uid, domain, timestamp);
             } else {
-                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND status=? AND measure_time<? ORDER BY measure_date DESC LIMIT %s", table_name, size);
+                String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND status=? AND measure_time>? ORDER BY measure_date DESC LIMIT %s", table_name, size);
                 return this.getJdbcTemplate().query(sql,new Quota(), uid, domain, status, timestamp);
             }
         }
@@ -92,7 +92,17 @@ public class QuotaDaoImpl extends JdbcDaoSupport implements QuotaDao {
 
     @Override
     public int update(Quota quota) throws Exception {
-        String sql = String.format("UPDATE %s SET data=?, measure_time=? WHERE id=?",table_name);
-        return this.getJdbcTemplate().update(sql,quota.getData().toString(), quota.getMeasure_time(),quota.getId());
+        String sql = String.format("UPDATE %s SET data=?, measure_time=?, modify_time=? WHERE id=?",table_name);
+        return this.getJdbcTemplate().update(sql,quota.getData().toString(), quota.getMeasure_time(),TimeUtils.currentTime(0L), quota.getId());
+    }
+
+    @Override
+    public int getId(Quota quota) throws Exception {
+        String sql = String.format("SELECT * FROM %s WHERE uid=? AND domain=? AND measure_time=? ORDER BY modify_time DESC",table_name);
+        List<Quota> quotaList = this.getJdbcTemplate().query(sql,new Quota(), quota.getUid(),quota.getDomain(),quota.getMeasure_time());
+        if (quotaList.size()>=0) {
+            quota.setId(quotaList.get(0).getId());
+        }
+        return quota.getId();
     }
 }

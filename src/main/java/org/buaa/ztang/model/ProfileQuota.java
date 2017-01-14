@@ -50,12 +50,12 @@ public class ProfileQuota extends Quota {
         for ( String domain : quotaObjects.keySet() ) {
             Quota quota = Quota.GetQuota(domain);
             if (quota != null ) {
-                quota.parseData(dataJSON.getJSONObject(domain));
+                quota.parseData(quotaObjects.getJSONObject(domain));
                 quotas.put(domain,quota);
             }
         }
 
-        JSONObject suggestionObjects = dataJSON.getJSONObject("suggestion");
+        JSONObject suggestionObjects = dataJSON.getJSONObject("suggestions");
         for ( String domain : suggestionObjects.keySet() ) {
             Suggestion suggestion = new Suggestion();
             suggestion.parseData(suggestionObjects.getJSONObject(domain));
@@ -92,6 +92,7 @@ public class ProfileQuota extends Quota {
             suggestion = QuotaAlgorithmImpl.getAlgorithm(other.getDomain()).algo(this);
         }
 
+        suggestion.setQuota_id(other.getId());
         suggestions.put(other.getDomain(),suggestion);
     }
 
@@ -106,19 +107,11 @@ public class ProfileQuota extends Quota {
     }
 
     public Suggestion getSuggestion(String domain) {
-        if ( suggestions.containsKey(domain) ) return suggestions.get(domain);
-        else return null;
-    }
-
-    public JSONObject getQuotaAndSuggestion(String domain) {
         if ( quotas.containsKey(domain) && suggestions.containsKey(domain) ) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("quota_data",quotas.get(domain).dumpData());
             if ( domain.compareToIgnoreCase(DietListQuota.domain_name) == 0
                     || domain.compareToIgnoreCase(ExerListQuota.domain_name) == 0)
-                jsonObject.put("suggestion_data",QuotaAlgorithmImpl.getAlgorithm(domain).algo(this));
-            else jsonObject.put("suggestion_data",suggestions.get(domain).dumpData());
-            return jsonObject;
+                return QuotaAlgorithmImpl.getAlgorithm(domain).algo(this);
+            else return suggestions.get(domain);
         }
         return null;
     }

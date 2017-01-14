@@ -98,6 +98,18 @@ public class QuotaServiceImpl implements QuotaService {
     }
 
     @Override
+    public int addOrUpdate(Quota quota) throws Exception {
+        if ( quota.getId() != -1 ) {
+            return update(quota);
+        } else {
+            if ( getId(quota)!=0 ) {
+                return update(quota);
+            }
+        }
+        return add(quota);
+    }
+
+    @Override
     public int profileUpdate(Quota quota) throws Exception {
         int ret = 0;
         List<ProfileQuota> profileQuotaList = get(quota.getUid(),ProfileQuota.domain_name,null,ProfileQuota.class);
@@ -113,5 +125,10 @@ public class QuotaServiceImpl implements QuotaService {
         }
 
         return ret;
+    }
+
+    @Override
+    public int getId(Quota quota) throws Exception {
+        return quotaDao.getId(quota);
     }
 }

@@ -55,6 +55,10 @@ public class QuotaAction {
             } else {
                 quota.setUid(uid);
                 if ( quota.parseData(requestBody) != 0 && quotaService.add(quota) == 1) {
+                    if ( quotaService.getId(quota) == 0 ) {
+                        logger.warn("failure to get quota'id - quota:[{}]",quota);
+                        return new HttpResponseWrapperUtils(null,-1,"failure to get quota's id");
+                    }
                     quotaService.profileUpdate(quota);
                     logger.info("success to add the quota:[{}]",quota);
                     return new HttpResponseWrapperUtils(null);

@@ -22,4 +22,6 @@ public interface QuotaDao {
     int add(Quota quota) throws Exception;
 
     int update(Quota quota) throws Exception;
+
+    int getId(Quota quota) throws Exception;
 }

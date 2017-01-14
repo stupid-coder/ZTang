@@ -15,6 +15,7 @@ public class Suggestion extends Quota {
     private JSONObject quota_data;
 
     public Suggestion() {
+        setDomain(domain_name);
         suggestion = null;
         quota_id = -1;
         quota_domain = null;
@@ -22,6 +23,9 @@ public class Suggestion extends Quota {
     }
 
     public Suggestion(ProfileQuota profileQuota, String domain) {
+        setDomain(domain_name);
+        setUid(profileQuota.getUid());
+
         suggestion = null;
         quota_id = profileQuota.getQuota(domain).getId();
         quota_domain = domain;
@@ -55,10 +59,11 @@ public class Suggestion extends Quota {
     public void mergeData(Quota other) {
         if ( other instanceof Suggestion ) {
             Suggestion otherQuota = (Suggestion) other;
-            suggestion = otherQuota.suggestion;
-            quota_id = otherQuota.quota_id;
-            quota_domain = otherQuota.quota_domain;
-            quota_data = otherQuota.quota_data;
+            if ( quota_domain.compareToIgnoreCase(otherQuota.quota_domain) == 0 ) {
+                suggestion = otherQuota.suggestion;
+                quota_id = otherQuota.quota_id;
+                quota_data = otherQuota.quota_data;
+            }
         }
     }
 

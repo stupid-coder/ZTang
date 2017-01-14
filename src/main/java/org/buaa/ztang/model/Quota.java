@@ -22,6 +22,7 @@ public class Quota implements java.io.Serializable, RowMapper<Quota>, Comparable
     private String domain;
     private JSONObject data;
     private Timestamp measure_time;
+    private Timestamp modify_time;
     private String status;
 
     public Quota()
@@ -31,6 +32,7 @@ public class Quota implements java.io.Serializable, RowMapper<Quota>, Comparable
         domain = null;
         data = null;
         measure_time = null;
+        modify_time = null;
         status = null;
     }
 
@@ -78,6 +80,7 @@ public class Quota implements java.io.Serializable, RowMapper<Quota>, Comparable
         this.domain = quota.domain;
         this.data = quota.data;
         this.measure_time = quota.measure_time;
+        this.modify_time = quota.modify_time;
         this.status = quota.status;
         parseData(this.data);
     }
@@ -143,6 +146,14 @@ public class Quota implements java.io.Serializable, RowMapper<Quota>, Comparable
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    public Timestamp getModify_time() {
+        return modify_time;
+    }
+
+    public void setModify_time(Timestamp modify_time) {
+        this.modify_time = modify_time;
     }
 
     @Override

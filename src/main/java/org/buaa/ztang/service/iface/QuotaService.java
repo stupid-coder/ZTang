@@ -22,5 +22,9 @@ public interface QuotaService {
 
     int update(Quota quota) throws Exception;
 
+    int addOrUpdate(Quota quota) throws Exception;
+
+    int getId(Quota quota) throws Exception;
+
     int profileUpdate(Quota quota) throws Exception;
 }
